@@ -1,6 +1,28 @@
+//create table emprunts(
+    idem int4 primary key not null,
+    dateemp varchar(25),
+    dateret varchar(25),
+    emprunteur int4,
+    exemempr int4
+    );
+    
+//create table usagers(
+    idu int4 primary key not null,
+    nom varchar(25),
+    prenom varchar(25),
+    status varchar(25),
+    email varchar(40)
+    );    
+
+//create table exemplaire(
+    idex int4 primary key not null,
+    exemliv int4
+    );    
+
+
 //Esta encuesta devuelve el historico de prestamos (FECHA DE INICIO - FECHA DE FIN - TITULO DEL LIBRO - APELLIDO DEL USUARIO - NOMBRE DEL USUARIO - ID EJEMPLAR)
 
-//select emp.dateemp, emp.dateret, liv.titre, us.nom, us.prenom, ex.idex
+select emp.dateemp, emp.dateret, liv.titre, us.nom, us.prenom, ex.idex
 from usagers us join emprunts emp on us.idu=emp.emprunteur
 join  exemplaire ex on ex.idex=emp.exemempr
 join livre liv on ex.exemliv=liv.id
@@ -9,7 +31,7 @@ order by dateemp desc;
 //Esta encuesta devuelve los prestamos en curso (FECHA DE INICIO - TITULO DEL LIBRO - APELLIDO DEL USUARIO - NOMBRE DEL USUARIO - ID EJEMPLAR)
 
 
-//select emp.dateemp, liv.titre, us.nom, us.prenom, ex.idex
+select emp.dateemp, liv.titre, us.nom, us.prenom, ex.idex
 from usagers us join emprunts emp on us.idu=emp.emprunteur
 join exemplaire ex on ex.idex=emp.exemempr
 join livre liv on ex.exemliv=liv.id
@@ -25,23 +47,3 @@ select liv.id, liv.isbn10, liv.isbn13, liv.titre, liv.auteur
 from livre liv;
 
     
-//create table emprunts(
-    idem int4 primary key not null
-    dateemp varchar(25)
-    dateret varchar(25)
-    emprunteur int4
-    exemempr int4
-    );
-    
-//create table usagers(
-    idu int4 primary key not null
-    nom varchar(25)
-    prenom varchar(25)
-    status varchar(25)
-    email varchar(40)
-    );    
-
-//create table exemplaire(
-    idex int4 primary key not null
-    exemliv int4
-    );    
