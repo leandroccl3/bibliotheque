@@ -1,0 +1,23 @@
+//esta encuesta devuelve el historico de prestamos (FECHA DE INICIO - FECHA DE FIN - TITULO DEL LIBRO - APELLIDO DEL USUARIO - NOMBRE DEL USUARIO - ID EJEMPLAR)
+
+select emp.dateemp, emp.dateret, liv.titre, us.nom, us.prenom, ex.idex
+from usagers us join emprunts emp on us.idu=emp.emprunteur
+join  exemplaire ex on ex.idex=emp.exemempr
+join livre liv on ex.exemliv=liv.id
+order by dateemp desc;
+
+//esta encuesta devuelve los prestamos en curso (FECHA DE INICIO - TITULO DEL LIBRO - APELLIDO DEL USUARIO - NOMBRE DEL USUARIO - ID EJEMPLAR)
+
+
+select emp.dateemp, liv.titre, us.nom, us.prenom, ex.idex
+from usagers us join emprunts emp on us.idu=emp.emprunteur
+join exemplaire ex on ex.idex=emp.exemempr
+join livre liv on ex.exemliv=liv.id
+where emp.dateret is null
+order by dateemp desc;
+
+create table holis(
+    nombre text,
+    apellido text,
+    edad integer primary key not null
+    );
