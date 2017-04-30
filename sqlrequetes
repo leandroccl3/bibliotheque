@@ -46,4 +46,19 @@ from usagers us;
 select liv.id, liv.isbn10, liv.isbn13, liv.titre, liv.auteur
 from livre liv;
 
-    
+//Esta sentencia permite agregar un libro a la base de datos
+INSERT INTO livre VALUES (idx,isbn10x,isbn13x,titrex,auteurx)
+
+// idx Id Libro, la x indica que es una variable ingresada mediante la interfaz grafica 
+// isbn10x ISBN10, la x indica que es una variable ingresada mediante la interfaz grafica
+// isbn13x ISBN13, la x indica que es una variable ingresada mediante la interfaz grafica
+// titrex Titulo del Libro, la x indica que es una variable ingresada mediante la interfaz grafica
+// auteurx Autor del libro, la x indica que es una variable ingresada mediante la interfaz grafica
+
+//Esta sentencia permite agregar un abonado a la base de datos
+INSERT INTO livre VALUES (nomx,prenomx,occupationx,emailx)
+
+// nomx Apellido del Abonado, la x indica que es una variable ingresada mediante la interfaz grafica 
+// prenomx Nombre del Abonado, la x indica que es una variable ingresada mediante la interfaz grafica
+// occupationx Etudiant/Enseignant, la x indica que es una variable ingresada mediante la interfaz grafica
+// emailx Correo electronico del Abonado, la x indica que es una variable ingresada mediante la interfaz grafica
