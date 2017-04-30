@@ -62,3 +62,14 @@ INSERT INTO livre VALUES (nomx,prenomx,occupationx,emailx)
 // prenomx Nombre del Abonado, la x indica que es una variable ingresada mediante la interfaz grafica
 // occupationx Etudiant/Enseignant, la x indica que es una variable ingresada mediante la interfaz grafica
 // emailx Correo electronico del Abonado, la x indica que es una variable ingresada mediante la interfaz grafica
+
+INSERT INTO livre emprunts (nomx,prenomx,occupationx,emailx)
+
+//Gestion de Emprunts> Emprunter
+//Con este codigo vamos a comparar la existencia del usuario, del ejemplar y aue el usuario no pueda retirar 2 libros iguales el mismo dia, para luego generar la variable IDEM, aue se compondrra de IDEM=IDU+IDX
+select idu from usagers
+select idx from exemplaire
+select id from livres
+
+INSERT INTO emprunts VALUES(IDEMy, dateempy, daterety);
+idexy
