@@ -21,3 +21,12 @@ create table holis(
     apellido text,
     edad integer primary key not null
     );
+
+
+//gestion de abonnés--liste de abonnés
+select us.idu, us.nom, us.prenom, us.status, us.email
+from usagers us;
+
+//gestion de livres--liste de livres
+select li.id, li.isbn10, li.isbn13, li.titre, li.auteur
+from livre li;
