@@ -39,7 +39,7 @@ create table usagers
 create table exemplaire 
 (
     idex serial primary key,
-    exemliv serial references livre
+    exemliv serial references livre (id)
 );
 --+-----------------------------------------------------------------------------------------------+
 create table emprunts 
@@ -47,8 +47,8 @@ create table emprunts
     idem serial primary key,
     dateemp date not null,
     dateret date not null,
-    emprunteur serial references usagers,
-    exemempr serial references exemplaire
+    emprunteur serial references usagers (idu),
+    exemempr serial references exemplaire (idex)
 );
 
 -- +----------------------------------------------------------------------------------------------+
