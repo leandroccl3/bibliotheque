@@ -28,12 +28,28 @@ public class ComposantBDAbonne {
    */
   public static ArrayList<String[]> listeTousLesAbonnes() throws SQLException {
     // L'ArrayList qui sera renvoyé : structure de données de type tableau non limitée en taille
-    ArrayList<String[]> abonnes = new ArrayList<String[]>();
-    //
-    // A COMPLETER
-    //
-    return abonnes;
+    ArrayList<String[]> abonne = new ArrayList<String[]>();
+    Statement stmt = Connexion.getConnection().createStatement();
+  String sql = "select * from usagers";
+  ResultSet rset = stmt.executeQuery(sql);
+
+  while (rset.next()) {
+    String[] abonnes = new String[5];
+    abonnes[0] = rset.getString("IDU");
+    abonnes[1] = rset.getString("nom");
+    abonnes[2] = rset.getString("prenom");
+    abonnes[3] = rset.getString("status");
+    abonnes[4] = rset.getString("email");
+
+    abonne.add(abonnes);
+    
   }
+  rset.close();
+  stmt.close();
+  
+  
+  return abonne;
+}
 
   /**
    * Retourne le nombre d'abonnés référencés dans la base.
@@ -42,10 +58,26 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static int nbAbonnes() throws SQLException {
-    //
-    // A COMPLETER
-    //
-    return -1;
+	 
+	ArrayList<String[]> nbAbonne = new ArrayList<String[]>();
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "select nom from usagers";
+	  ResultSet rset = stmt.executeQuery(sql);
+
+	  while (rset.next()) {
+	    String[] nbAbonnes = new String[1];
+	    nbAbonnes[0] = rset.getString("nom");
+	    
+	    nbAbonne.add(nbAbonnes);
+	    
+	  }
+	  rset.close();
+	  stmt.close();
+	  
+	  int sizeAbonne = nbAbonne.size();
+	  
+    return sizeAbonne;
   }
 
   /**
@@ -64,10 +96,21 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static String[] getAbonne(int idAbonne) throws SQLException {
+    
+  Statement stmt = Connexion.getConnection().createStatement();
+  String sql = "select nom, prenom, status, email from usagers where IDU=idAbonne";
+  ResultSet rset = stmt.executeQuery(sql);
+
     String[] abonne = new String[5];
-    //
-    // A COMPLETER
-    //
+    abonne[0] = rset.getString("IDU");
+    abonne[1] = rset.getString("nom");
+    abonne[2] = rset.getString("prenom");
+    abonne[3] = rset.getString("status");
+    abonne[4] = rset.getString("email");
+
+    
+  rset.close();
+  stmt.close();
     return abonne;
   }
 
@@ -82,12 +125,35 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
-    //
-    // A COMPLETER
-    //
-    return -1;
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  stmt.executeUpdate("insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)");
+	  int idAbonne=0;
+	  
+	  stmt.setInt(1,idAbonne);
+	  stmt.setString(2,nom);  //Preguntar: aca agregamos cada variable interna de java a la base de datos. Es lo mismo poner String, si la tabla acepta varchar?
+	  stmt.setString(3,prenom);
+	  stmt.setString(4,statut);
+	  stmt.setString(5,email);
+	  stmt.close();
+	  
+	  idAbonne=idAbonne+1;
+	  return -1;
   }
 
+  
+  //String sISBN = "84-9815-212-7";
+  //String sTitulo = "Yo, Claudio";
+  //String sDescripcion= "Supuesta autobiografía de Claudio...";
+  //String sCategoria = "novela histórica";
+  //int idAutor = 3;
+   
+  //stmt.setString(1,sISBN);
+  //stmt.setInt(2,idAutor);
+  //stmt.setString(3,sTitulo);
+  //stmt.setString(4,sDescripcion);
+  //stmt.setString(5,sCategoria);
+  
   /**
    * Modification des informations d'un abonné donné connu à partir de son
    * identifiant : les nouvelles valeurs (nom, prenom, etc.) écrasent les anciennes.
