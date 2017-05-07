@@ -23,7 +23,7 @@ public class ComposantBDEmprunt {
       public static int nbEmpruntsEnCours() throws SQLException {
 	  ArrayList<String[]> nbEmpCur = new ArrayList<String[]>();
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql="select idem from emprunts where dateret = ('2017-01-01') ";
+	  String sql="select idem from emprunts where dateret = ('1111-11-11') ";
 	  ResultSet rset = stmt.executeQuery(sql);
 	  
 	  
