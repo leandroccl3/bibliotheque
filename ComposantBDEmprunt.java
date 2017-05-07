@@ -20,11 +20,28 @@ public class ComposantBDEmprunt {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static int nbEmpruntsEnCours() throws SQLException {
-    //
-    // A COMPLETER
-    //
-    return -1;
+      public static int nbEmpruntsEnCours() throws SQLException {
+	  ArrayList<String[]> nbEmpCur = new ArrayList<String[]>();
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql="select idem from emprunts where dateret = ('2017-01-01') ";
+	  ResultSet rset = stmt.executeQuery(sql);
+	  
+	  
+	  
+	  while(rset.next()){
+		  String[] nbEmpCurs = new String[1];
+		  nbEmpCurs[0] = rset.getString("idem");
+		  nbEmpCur.add(nbEmpCurs);
+		  }
+	  
+	  rset.close();
+	  stmt.close();
+
+	  int sizeNbEmpCur = nbEmpCur.size();
+	
+	  return sizeNbEmpCur;
   }
+
 
   /**
    * Retourne le nombre d'emprunts en cours pour un abonné donné connu
