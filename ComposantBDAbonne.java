@@ -124,22 +124,32 @@ public class ComposantBDAbonne {
    * @return l'identifiant de l'abonné référencé.
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-  public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
+ public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  stmt.executeUpdate("insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)");
-	  int idAbonne=0;
+	  //stmt.executeUpdate("insert into usagers values ('70000','?','a','a','a')");
 	  
-	  stmt.setInt(1,idAbonne);
-	  stmt.setString(2,nom);  //Preguntar: aca agregamos cada variable interna de java a la base de datos. Es lo mismo poner String, si la tabla acepta varchar?
-	  stmt.setString(3,prenom);
-	  stmt.setString(4,statut);
-	  stmt.setString(5,email);
+	  //String sql = "insert into usagers values ('314156','jhon','papadopulus','35','22')";
+	  
+	  PreparedStatement ps = Connexion.prepareStatement("insert into usagers(idu, nom, prenom, status, email) values ('54321',?,'?','?','?')");
+	  //String sql2 = "insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)";
+	  //int idAbonne=1000;
+	  
+	  //sql2.set(2,nom);
+	  
+	  ps.setString(2,nom);
+	  //stmt.setString(2,nom);  //Preguntar: aca agregamos cada variable interna de java a la base de datos. Es lo mismo poner String, si la tabla acepta varchar?
+	  //stmt.setString(3,prenom);
+	  //stmt.setString(4,statut);
+	  //stmt.setString(5,email);*/
+	  	 
+	  ps.executeUpdate();
 	  stmt.close();
 	  
-	  idAbonne=idAbonne+1;
+	  //idAbonne=idAbonne+1;
 	  return -1;
   }
+
 
   
   //String sISBN = "84-9815-212-7";
