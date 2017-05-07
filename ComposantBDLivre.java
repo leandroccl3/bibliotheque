@@ -47,10 +47,19 @@ public class ComposantBDLivre {
     }
     rset.close();
     stmt.close();
-
+    
+        
+//    for (int i=1,i<6, i++){
+//    System.out.println(livre[i]);
+//    }
     return livres;
+    
+   
   }
 
+  
+  
+  
   /**
    * Retourne le nombre de livres référencés dans la base.
    * 
@@ -58,10 +67,25 @@ public class ComposantBDLivre {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static int nbLivres() throws SQLException {
-    //
-    // A COMPLETER
-    //
-    return -1;
+ArrayList<String[]> nbLivre = new ArrayList<String[]>();
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "select id from livre";
+	  ResultSet rset = stmt.executeQuery(sql);
+
+	  while (rset.next()) {
+	    String[] nbLivres = new String[1];
+	    nbLivres[0] = rset.getString("id");
+	    
+	    nbLivre.add(nbLivres);
+	    
+	  }
+	  rset.close();
+	  stmt.close();
+	  
+	  int sizeNbLivres = nbLivre.size();
+	  
+    return sizeNbLivres;
   }
 
   /**
@@ -129,6 +153,8 @@ public class ComposantBDLivre {
     return -1;
   }
   
+  
+  
 /**
    * Modification des informations d'un livre donné connu à partir de son
    * identifiant : les nouvelles valeurs (isbn10, isbn13, etc.) écrasent les
@@ -168,10 +194,25 @@ public class ComposantBDLivre {
     * @throws SQLException en cas d'erreur de connexion à la base.
     */
    public static int nbExemplaires(int idLivre) throws SQLException {
-     //
-     // A COMPLETER
-     //
-     return -1;
+	   ArrayList<String[]> nbExemplaire = new ArrayList<String[]>();
+		  
+		  Statement stmt = Connexion.getConnection().createStatement();
+		  String sql = "select idex from exemplaire";
+		  ResultSet rset = stmt.executeQuery(sql);
+
+		  while (rset.next()) {
+		    String[] nbExemplaires = new String[1];
+		    nbExemplaires[0] = rset.getString("id");
+		    
+		    nbExemplaire.add(nbExemplaires);
+		    
+		  }
+		  rset.close();
+		  stmt.close();
+		  
+		  int sizeNbExemplaires = nbExemplaire.size();
+		  
+	    return sizeNbExemplaires;
    }
 
   /**
