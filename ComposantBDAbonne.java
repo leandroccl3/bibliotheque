@@ -1,6 +1,7 @@
 package biblio;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,8 +29,9 @@ public class ComposantBDAbonne {
    */
   public static ArrayList<String[]> listeTousLesAbonnes() throws SQLException {
     // L'ArrayList qui sera renvoyé : structure de données de type tableau non limitée en taille
-    ArrayList<String[]> abonne = new ArrayList<String[]>();
-    Statement stmt = Connexion.getConnection().createStatement();
+	  
+  ArrayList<String[]> abonne = new ArrayList<String[]>();
+  Statement stmt = Connexion.getConnection().createStatement();
   String sql = "select * from usagers";
   ResultSet rset = stmt.executeQuery(sql);
 
@@ -47,7 +49,7 @@ public class ComposantBDAbonne {
   rset.close();
   stmt.close();
   
-  
+ 
   return abonne;
 }
 
@@ -77,7 +79,7 @@ public class ComposantBDAbonne {
 	  
 	  int sizeAbonne = nbAbonne.size();
 	  
-    return sizeAbonne;
+	return sizeAbonne;
   }
 
   /**
@@ -124,47 +126,39 @@ public class ComposantBDAbonne {
    * @return l'identifiant de l'abonné référencé.
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
- public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
+  public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
 	  //stmt.executeUpdate("insert into usagers values ('70000','?','a','a','a')");
 	  
-	  //String sql = "insert into usagers values ('314156','jhon','papadopulus','35','22')";
+	  //String sql = "insert into usagers values ('3459','jhon','papadopulus','35','22')";
 	  
-	  PreparedStatement ps = Connexion.prepareStatement("insert into usagers(idu, nom, prenom, status, email) values ('54321',?,'?','?','?')");
-	  //String sql2 = "insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)";
+	  //PreparedStatement ps = Connexion.prepareStatement("insert into usagers(idu, nom, prenom, status, email) values ('54321',?,'?','?','?')");
+	  //String sql = "insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)";
 	  //int idAbonne=1000;
 	  
-	  //sql2.set(2,nom);
+	  //sql.setString(2,nom);
 	  
-	  ps.setString(2,nom);
+	  //ps.setString(2,nom);
 	  //stmt.setString(2,nom);  //Preguntar: aca agregamos cada variable interna de java a la base de datos. Es lo mismo poner String, si la tabla acepta varchar?
 	  //stmt.setString(3,prenom);
 	  //stmt.setString(4,statut);
 	  //stmt.setString(5,email);*/
 	  	 
-	  ps.executeUpdate();
+	  //ps.executeUpdate();
 	  stmt.close();
 	  
 	  //idAbonne=idAbonne+1;
 	  return -1;
   }
 
+  
+//  private static void sql(int i, String nom) {
+	// TODO Auto-generated method stub
+	
+//}
 
-  
-  //String sISBN = "84-9815-212-7";
-  //String sTitulo = "Yo, Claudio";
-  //String sDescripcion= "Supuesta autobiografía de Claudio...";
-  //String sCategoria = "novela histórica";
-  //int idAutor = 3;
-   
-  //stmt.setString(1,sISBN);
-  //stmt.setInt(2,idAutor);
-  //stmt.setString(3,sTitulo);
-  //stmt.setString(4,sDescripcion);
-  //stmt.setString(5,sCategoria);
-  
-  /**
+/**
    * Modification des informations d'un abonné donné connu à partir de son
    * identifiant : les nouvelles valeurs (nom, prenom, etc.) écrasent les anciennes.
    * 
@@ -193,4 +187,3 @@ public class ComposantBDAbonne {
     //
   }
 }
-//comentario
