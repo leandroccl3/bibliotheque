@@ -28,30 +28,32 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static ArrayList<String[]> listeTousLesAbonnes() throws SQLException {
-    // L'ArrayList qui sera renvoyé : structure de données de type tableau non limitée en taille
 	  
-  ArrayList<String[]> abonne = new ArrayList<String[]>();
-  Statement stmt = Connexion.getConnection().createStatement();
-  String sql = "select * from usagers";
-  ResultSet rset = stmt.executeQuery(sql);
-
-  while (rset.next()) {
-    String[] abonnes = new String[5];
-    abonnes[0] = rset.getString("IDU");
-    abonnes[1] = rset.getString("nom");
-    abonnes[2] = rset.getString("prenom");
-    abonnes[3] = rset.getString("status");
-    abonnes[4] = rset.getString("email");
-
-    abonne.add(abonnes);
-    
-  }
-  rset.close();
-  stmt.close();
-  
- 
-  return abonne;
-}
+	  ArrayList<String[]> abonne = new ArrayList<String[]>();
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "select * from usagers";
+	  ResultSet rset = stmt.executeQuery(sql);
+	  
+	  while (rset.next()) {
+		  
+		  String[] abonnes = new String[5];
+		  
+		  abonnes[0] = rset.getString("IDU");
+		  abonnes[1] = rset.getString("nom");
+		  abonnes[2] = rset.getString("prenom");
+		  abonnes[3] = rset.getString("status");
+		  abonnes[4] = rset.getString("email");
+		  
+		  abonne.add(abonnes);
+		  
+		  }
+	  
+	  rset.close();
+	  stmt.close();
+	  
+	  return abonne;
+	  }
 
   /**
    * Retourne le nombre d'abonnés référencés dans la base.
@@ -69,17 +71,20 @@ public class ComposantBDAbonne {
 
 	  while (rset.next()) {
 	    String[] nbAbonnes = new String[1];
+	    
 	    nbAbonnes[0] = rset.getString("nom");
 	    
 	    nbAbonne.add(nbAbonnes);
 	    
-	  }
+	    }
+	  
 	  rset.close();
 	  stmt.close();
 	  
 	  int sizeAbonne = nbAbonne.size();
 	  
-	return sizeAbonne;
+	  return sizeAbonne;
+	  
   }
 
   /**
@@ -104,16 +109,18 @@ public class ComposantBDAbonne {
   ResultSet rset = stmt.executeQuery(sql);
 
     String[] abonne = new String[5];
+    
     abonne[0] = rset.getString("IDU");
     abonne[1] = rset.getString("nom");
     abonne[2] = rset.getString("prenom");
     abonne[3] = rset.getString("status");
     abonne[4] = rset.getString("email");
-
     
-  rset.close();
-  stmt.close();
+    rset.close();
+    stmt.close();
+    
     return abonne;
+    
   }
 
   /**
