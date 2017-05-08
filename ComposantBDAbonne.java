@@ -105,12 +105,12 @@ public class ComposantBDAbonne {
   public static String[] getAbonne(int idAbonne) throws SQLException {
     
   Statement stmt = Connexion.getConnection().createStatement();
-  String sql = "select nom, prenom, status, email from usagers where IDU=idAbonne";
+  String sql = "select * from usagers where idu='"+idAbonne+"'";
   ResultSet rset = stmt.executeQuery(sql);
 
     String[] abonne = new String[5];
     
-    abonne[0] = rset.getString("IDU");
+    abonne[0] = rset.getString("idu");
     abonne[1] = rset.getString("nom");
     abonne[2] = rset.getString("prenom");
     abonne[3] = rset.getString("status");
@@ -135,28 +135,24 @@ public class ComposantBDAbonne {
    */
   public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
 	  
+	  int idAbonne = 0;
+	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  //stmt.executeUpdate("insert into usagers values ('70000','?','a','a','a')");
+	  String sql = "insert into usagers values (nextval('usagers_idu_seq'),'"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
 	  
-	  //String sql = "insert into usagers values ('3459','jhon','papadopulus','35','22')";
+	  stmt.executeUpdate(sql);
 	  
-	  //PreparedStatement ps = Connexion.prepareStatement("insert into usagers(idu, nom, prenom, status, email) values ('54321',?,'?','?','?')");
-	  //String sql = "insert into usagers(idu, nom, prenom, status, email) values (?,?,?,?,?)";
-	  //int idAbonne=1000;
+	  String query = "select currval('usagers_idu_seq') as valeur_courante_idu_usagers"; 
+	  ResultSet rset = stmt.executeQuery(query);
 	  
-	  //sql.setString(2,nom);
+	  rset.next();
 	  
-	  //ps.setString(2,nom);
-	  //stmt.setString(2,nom);  //Preguntar: aca agregamos cada variable interna de java a la base de datos. Es lo mismo poner String, si la tabla acepta varchar?
-	  //stmt.setString(3,prenom);
-	  //stmt.setString(4,statut);
-	  //stmt.setString(5,email);*/
-	  	 
-	  //ps.executeUpdate();
+	  idAbonne=rset.getInt("valeur_courante_idu_usagers");
+	  
+	  rset.close();
 	  stmt.close();
 	  
-	  //idAbonne=idAbonne+1;
-	  return -1;
+	  return idAbonne;
   }
 
   
@@ -177,9 +173,13 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static void modifierAbonne(int idAbonne, String nom, String prenom, String statut, String email) throws SQLException {
-    //
-    // A COMPLETER
-    //
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "insert into usagers values ('"+idAbonne+"','"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
+	  
+	  stmt.executeUpdate(sql);
+	  
+	  stmt.close();
   }
 
   /**
@@ -189,8 +189,12 @@ public class ComposantBDAbonne {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static void supprimerAbonne(int idAbonne) throws SQLException {
-    //
-    // A COMPLETER
-    //
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "delete from usagers where idu='"+idAbonne+"'";
+	  
+	  stmt.executeUpdate(sql);
+	  
+	  stmt.close();
   }
 }
