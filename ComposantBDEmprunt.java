@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -92,18 +93,22 @@ public class ComposantBDEmprunt {
 	  ArrayList<String[]> listeEmpruntsEnCours = new ArrayList<String[]>();
 		 
 		 Statement stmt = Connexion.getConnection().createStatement();
-		 String sql="select * from emprunts";
+		 
+		 String sql = "select ex.idex, liv.titre, us.nom, us.prenom, emp.dateemp,"
+		 		+ " emp.dateret from usagers us join emprunts emp on "
+		 		+ "us.idu=emp.emprunteur join exemplaire ex on ex.idex=emp.exemempr"
+		 		+ " join livre liv on ex.exemliv=liv.id where dateret='1111-11-11'";
+		 
 		 ResultSet rset = stmt.executeQuery(sql);
 		 
 		 while(rset.next()){
 			 
-			 String[] listeEmpruntsEnCourss = new String[5];
+			 String[] listeEmpruntsEnCourss = new String[4];
 			 
-			 listeEmpruntsEnCourss[0] = rset.getString("idem");
-			 listeEmpruntsEnCourss[1] = rset.getString("dateemp");
-			 listeEmpruntsEnCourss[2] = rset.getString("dateret");
-			 listeEmpruntsEnCourss[3] = rset.getString("emprunteur");
-			 listeEmpruntsEnCourss[4] = rset.getString("exemempr");
+			 listeEmpruntsEnCourss[0] = rset.getString("idex");
+			 listeEmpruntsEnCourss[1] = rset.getString("titre");
+			 listeEmpruntsEnCourss[2] = rset.getString("nom");
+			 listeEmpruntsEnCourss[3] = rset.getString("dateemp");
 			 
 			 listeEmpruntsEnCours.add(listeEmpruntsEnCourss);
 			 
@@ -134,21 +139,21 @@ public class ComposantBDEmprunt {
 	ArrayList<String[]> empruntsEnCours = new ArrayList<String[]>();
     
 	Statement stmt = Connexion.getConnection().createStatement();
-    String sql = "select ex.idex, liv.titre, us.nom,"
-    		+ " emp.dateemp, emp.dateret from usagers"
-    		+ " us join emprunts emp on us.idu=emp.emprunteur"
-    		+ " join exemplaire ex on ex.idex=emp.exemempr"
-    		+ " join livre liv on ex.exemliv=liv.id"
-    		+ " order by dateemp desc";
+	String sql = "select ex.idex, liv.titre, us.nom, us.prenom,"
+			+ " emp.dateemp, emp.dateret, us.idu from usagers"
+			+ " us join emprunts emp on us.idu=emp.emprunteur"
+			+ " join exemplaire ex on ex.idex=emp.exemempr"
+			+ " join livre liv on ex.exemliv=liv.id where"
+			+ " dateret='1111-11-11' and us.idu='"+idAbonne+"'";
+	
     ResultSet rset = stmt.executeQuery(sql);
 
     while (rset.next()) {
-      String[] listeEmpruntsEnCours = new String[5];
+      String[] listeEmpruntsEnCours = new String[4];
       listeEmpruntsEnCours[0] = rset.getString("idex");
       listeEmpruntsEnCours[1] = rset.getString("titre");
       listeEmpruntsEnCours[2] = rset.getString("nom");
       listeEmpruntsEnCours[3] = rset.getString("dateemp");
-      listeEmpruntsEnCours[4] = rset.getString("dateret");
       
       empruntsEnCours.add(listeEmpruntsEnCours);
  
@@ -222,10 +227,24 @@ public class ComposantBDEmprunt {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static void emprunter(int idAbonne, int idExemplaire) throws SQLException {
-    //
-    // A COMPLETER
-    //
+	  
+	   Statement stmt = Connexion.getConnection().createStatement();
+	   String sql = "insert into emprunts values (nextval('emprunts_idem_seq'),'2014-11-11','1111-11-11','"+idAbonne+"','"+idExemplaire+"')";
+	   
+	   stmt.executeUpdate(sql);
+	
+	   stmt.close();
   }
+	
+	  
+	  
+	  //insert into emprunts values ('6','2014-11-11','1111-11-11','314156','6');
+	  
+	  
+	  //hay que obtener la fecha
+	  //var date = new Date();
+	  //date.toISOString(); preguntar!!
+	  
 
   /**
    * Retourner un exemplaire à partir de son identifiant.
