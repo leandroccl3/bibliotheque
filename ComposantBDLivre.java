@@ -50,11 +50,7 @@ public class ComposantBDLivre {
 
     return livres;
    
-   
   }
-
-  
-  
   
   /**
    * Retourne le nombre de livres référencés dans la base.
@@ -63,7 +59,8 @@ public class ComposantBDLivre {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static int nbLivres() throws SQLException {
-ArrayList<String[]> nbLivre = new ArrayList<String[]>();
+	  
+	  ArrayList<String[]> nbLivre = new ArrayList<String[]>();
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
 	  String sql = "select id from livre";
@@ -76,6 +73,7 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
 	    nbLivre.add(nbLivres);
 	    
 	  }
+	  
 	  rset.close();
 	  stmt.close();
 	  
@@ -103,21 +101,21 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
     
      
      Statement stmt = Connexion.getConnection().createStatement();
-     String sql = "select titre from livre where id='"+idLivre+"'";
+     String sql = "select * from livre where id='"+idLivre+"'";
      ResultSet rset = stmt.executeQuery(sql);
 	 
-       String[] getLivre = new String[5];
+       String[] Livre = new String[5];
        
-       getLivre[0] = rset.getString("id");
-       getLivre[1] = rset.getString("isbn10");
-       getLivre[2] = rset.getString("isbn13");
-       getLivre[3] = rset.getString("titre");
-       getLivre[4] = rset.getString("auteur");
+       Livre[0] = rset.getString("id");
+       Livre[1] = rset.getString("isbn10");
+       Livre[2] = rset.getString("isbn13");
+       Livre[3] = rset.getString("titre");
+       Livre[4] = rset.getString("auteur");
      
      rset.close();
      stmt.close();
      
-     return getLivre;
+     return Livre;
    }
   
  /**
@@ -169,7 +167,7 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
    */
   public static int insererNouveauLivre(String isbn10, String isbn13, String titre, String auteur) throws SQLException {
 	  
-	  int id= 100;
+	  int id= 0;
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
 	  String sql = "insert into livre values (nextval('livre_id_seq'),'"+isbn10+"', '"+isbn13+"', '"+titre+"', '"+auteur+"')";
@@ -180,6 +178,7 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
 	  ResultSet rset = stmt.executeQuery(query);
 	  
 	  rset.next();
+	  
 	  id=rset.getInt("valeur_courante_id_livre");
 	  
 	  rset.close();
@@ -202,9 +201,13 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static void modifierLivre(int idLivre, String isbn10, String isbn13, String titre, String auteur) throws SQLException {
-    //
-    // A COMPLETER
-    //
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "insert into livre values ('"+idLivre+"','"+isbn10+"', '"+isbn13+"', '"+titre+"', '"+auteur+"')";
+	  
+	  stmt.executeUpdate(sql);
+	  
+	  stmt.close();
   }
 
   /**
@@ -214,9 +217,13 @@ ArrayList<String[]> nbLivre = new ArrayList<String[]>();
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
    public static void supprimerLivre(int idLivre) throws SQLException {
-     //
-     // A COMPLETER
-     //
+	   
+	   Statement stmt = Connexion.getConnection().createStatement();
+	   String sql = "delete from livre where id='"+idLivre+"'";
+	   
+	   stmt.executeUpdate(sql);
+	
+	   stmt.close();
    }
 
    /**
