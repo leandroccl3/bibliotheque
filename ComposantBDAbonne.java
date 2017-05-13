@@ -107,6 +107,8 @@ public class ComposantBDAbonne {
   Statement stmt = Connexion.getConnection().createStatement();
   String sql = "select * from usagers where idu='"+idAbonne+"'";
   ResultSet rset = stmt.executeQuery(sql);
+  
+  rset.next(); 
 
     String[] abonne = new String[5];
     
