@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -54,7 +55,7 @@ public class ComposantBDEmprunt {
 	  ArrayList<String[]> nbEmpCurIdAbonne = new ArrayList<String[]>();
 		 
 		 Statement stmt = Connexion.getConnection().createStatement();
-		 String sql="select idem from emprunts where dateret = ('1111-11-11') and emprunteur = idAbonne ";
+		 String sql="select idem from emprunts where dateret = ('1111-11-11') and emprunteur = '"+idAbonne+"' ";
 		 ResultSet rset = stmt.executeQuery(sql);
 		 
 		 while(rset.next()){
@@ -94,7 +95,7 @@ public class ComposantBDEmprunt {
 		 
 		 Statement stmt = Connexion.getConnection().createStatement();
 		 
-		 String sql = "select ex.idex, liv.titre, us.nom, us.prenom, emp.dateemp,"
+		 String sql = "select ex.idex, liv.id, liv.titre, liv.auteur, emp.idem, us.nom, us.prenom, emp.dateemp,"
 		 		+ " emp.dateret from usagers us join emprunts emp on "
 		 		+ "us.idu=emp.emprunteur join exemplaire ex on ex.idex=emp.exemempr"
 		 		+ " join livre liv on ex.exemliv=liv.id where dateret='1111-11-11'";
@@ -103,12 +104,16 @@ public class ComposantBDEmprunt {
 		 
 		 while(rset.next()){
 			 
-			 String[] listeEmpruntsEnCourss = new String[4];
+			 String[] listeEmpruntsEnCourss = new String[8];
 			 
 			 listeEmpruntsEnCourss[0] = rset.getString("idex");
-			 listeEmpruntsEnCourss[1] = rset.getString("titre");
-			 listeEmpruntsEnCourss[2] = rset.getString("nom");
-			 listeEmpruntsEnCourss[3] = rset.getString("dateemp");
+			 listeEmpruntsEnCourss[1] = rset.getString("id");
+			 listeEmpruntsEnCourss[2] = rset.getString("titre");
+			 listeEmpruntsEnCourss[3] = rset.getString("auteur");
+			 listeEmpruntsEnCourss[4] = rset.getString("idem");
+			 listeEmpruntsEnCourss[5] = rset.getString("nom");
+			 listeEmpruntsEnCourss[6] = rset.getString("prenom");
+			 listeEmpruntsEnCourss[7] = rset.getString("dateemp");
 			 
 			 listeEmpruntsEnCours.add(listeEmpruntsEnCourss);
 			 
@@ -124,7 +129,7 @@ public class ComposantBDEmprunt {
    * 
    * @return un <code>ArrayList<String[]></code>. Chaque tableau de chaînes
    * de caractères contenu correspond à un emprunt en cours pour l'abonné.<br/>
-   * Il doit contenir 5 éléments (dans cet ordre) :
+   * Il doit contenir 8 éléments (dans cet ordre) :
    * <ul>
    *   <li>0 : id de l'exemplaire</li>
    *   <li>1 : id du livre correspondant</li>
@@ -149,11 +154,13 @@ public class ComposantBDEmprunt {
     ResultSet rset = stmt.executeQuery(sql);
 
     while (rset.next()) {
-      String[] listeEmpruntsEnCours = new String[4];
+      String[] listeEmpruntsEnCours = new String[5];
       listeEmpruntsEnCours[0] = rset.getString("idex");
-      listeEmpruntsEnCours[1] = rset.getString("titre");
-      listeEmpruntsEnCours[2] = rset.getString("nom");
-      listeEmpruntsEnCours[3] = rset.getString("dateemp");
+      listeEmpruntsEnCours[1] = rset.getString("idex");
+      listeEmpruntsEnCours[2] = rset.getString("titre");
+      listeEmpruntsEnCours[3] = rset.getString("nom");
+      listeEmpruntsEnCours[4] = rset.getString("dateemp");
+    
       
       empruntsEnCours.add(listeEmpruntsEnCours);
  
@@ -228,22 +235,18 @@ public class ComposantBDEmprunt {
    */
   public static void emprunter(int idAbonne, int idExemplaire) throws SQLException {
 	  
-	   Statement stmt = Connexion.getConnection().createStatement();
-	   String sql = "insert into emprunts values (nextval('emprunts_idem_seq'),'2014-11-11','1111-11-11','"+idAbonne+"','"+idExemplaire+"')";
+	  int year = Calendar.getInstance().get(Calendar.YEAR); 
+	  int month = Calendar.getInstance().get(Calendar.MONTH)+1; 
+	  int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); 
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "insert into emprunts values (nextval('emprunts_idem_seq'),'"+year+"-"+month+"-"+day+"','1111-11-11','"+idAbonne+"','"+idExemplaire+"')";
 	   
-	   stmt.executeUpdate(sql);
+	  stmt.executeUpdate(sql);
 	
-	   stmt.close();
-  }
-	
-	  
-	  
-	  //insert into emprunts values ('6','2014-11-11','1111-11-11','314156','6');
-	  
-	  
-	  //hay que obtener la fecha
-	  //var date = new Date();
-	  //date.toISOString(); preguntar!!
+	  stmt.close();
+
+  }  
 	  
 
   /**
@@ -253,9 +256,16 @@ public class ComposantBDEmprunt {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static void rendre(int idExemplaire) throws SQLException {
-    //
-    // A COMPLETER
-    //
+	  
+	  int year = Calendar.getInstance().get(Calendar.YEAR); 
+	  int month = Calendar.getInstance().get(Calendar.MONTH)+1; 
+	  int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); 
+	  int hour = Calendar.getInstance().get(Calendar.HOUR);
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "update emprunts set dateret = '"+year+"-"+month+"-"+day+"' where idem = '"+idExemplaire+"'";
+	  
+	  stmt.executeUpdate(sql);
   }
   
   /**
