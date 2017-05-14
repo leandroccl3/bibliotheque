@@ -156,7 +156,7 @@ public class ComposantBDEmprunt {
     while (rset.next()) {
       String[] listeEmpruntsEnCours = new String[5];
       listeEmpruntsEnCours[0] = rset.getString("idex");
-      listeEmpruntsEnCours[1] = rset.getString("idex");
+      listeEmpruntsEnCours[1] = rset.getString("id");
       listeEmpruntsEnCours[2] = rset.getString("titre");
       listeEmpruntsEnCours[3] = rset.getString("nom");
       listeEmpruntsEnCours[4] = rset.getString("dateemp");
@@ -196,8 +196,8 @@ public class ComposantBDEmprunt {
 	ArrayList<String[]> listes = new ArrayList<String[]>();
 	        
     Statement stmt = Connexion.getConnection().createStatement();
-    String sql = "select ex.idex, liv.titre, us.nom,"
-    		+ " emp.dateemp, emp.dateret from usagers"
+    String sql = "select ex.idex, liv.id, liv.titre, liv.auteur, "
+    		+ "us.idu, us.nom, us.prenom, emp.dateemp, emp.dateret from usagers"
     		+ " us join emprunts emp on us.idu=emp.emprunteur"
     		+ " join exemplaire ex on ex.idex=emp.exemempr"
     		+ " join livre liv on ex.exemliv=liv.id"
@@ -206,13 +206,17 @@ public class ComposantBDEmprunt {
 
     while (rset.next()) {
     	
-      String[] liste = new String[5];
+      String[] liste = new String[9];
       
       liste[0] = rset.getString("idex");
-      liste[1] = rset.getString("titre");
-      liste[2] = rset.getString("nom");
-      liste[3] = rset.getString("dateemp");
-      liste[4] = rset.getString("dateret");
+      liste[1] = rset.getString("id");
+      liste[2] = rset.getString("titre");
+      liste[3] = rset.getString("auteur");
+      liste[4] = rset.getString("idu");
+      liste[5] = rset.getString("nom");
+      liste[6] = rset.getString("prenom");
+      liste[7] = rset.getString("dateemp");
+      liste[8] = rset.getString("dateret");
       
       listes.add(liste);
       
@@ -260,7 +264,7 @@ public class ComposantBDEmprunt {
 	  int year = Calendar.getInstance().get(Calendar.YEAR); 
 	  int month = Calendar.getInstance().get(Calendar.MONTH)+1; 
 	  int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); 
-	  int hour = Calendar.getInstance().get(Calendar.HOUR);
+	  //int hour = Calendar.getInstance().get(Calendar.HOUR);
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
 	  String sql = "update emprunts set dateret = '"+year+"-"+month+"-"+day+"' where idem = '"+idExemplaire+"'";
@@ -277,10 +281,31 @@ public class ComposantBDEmprunt {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static boolean estEmprunte(int idExemplaire) throws SQLException {
+    int idem=0;
+    
     boolean estEmprunte = false;
-    //
-    // A COMPLETER
-    //
+    
+    Statement stmt = Connexion.getConnection().createStatement();
+	String sql = "select idem from emprunts where exemempr='"+idExemplaire+"'";
+	ResultSet rset = stmt.executeQuery(sql);
+
+	while (rset.next()) {
+	  	  
+	idem = rset.getInt("idem");
+	}    
+	
+	rset.close();
+	  
+	stmt.close();
+	 
+	 if (idem == 0) {
+		 estEmprunte = false;
+		 }
+	 
+	 else{
+			 estEmprunte = true;
+			 } 
+    
     return estEmprunte;
   }
 
