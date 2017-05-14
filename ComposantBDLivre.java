@@ -104,7 +104,9 @@ public class ComposantBDLivre {
      String sql = "select * from livre where id='"+idLivre+"'";
      ResultSet rset = stmt.executeQuery(sql);
 	 
-       String[] Livre = new String[5];
+       
+     rset.next();
+     String[] Livre = new String[5];
        
        Livre[0] = rset.getString("id");
        Livre[1] = rset.getString("isbn10");
@@ -141,6 +143,8 @@ public class ComposantBDLivre {
 	String sql = " select * from livre liv join exemplaire exem on liv.id=exem.exemliv";
 	ResultSet rset = stmt.executeQuery(sql);
 
+	rset.next();
+	
 		String[] getLivreParIdExemplaire = new String[6];
 		getLivreParIdExemplaire[0] = rset.getString("id");
 		getLivreParIdExemplaire[1] = rset.getString("exemliv");
@@ -149,8 +153,8 @@ public class ComposantBDLivre {
 	    getLivreParIdExemplaire[4] = rset.getString("titre");
 	    getLivreParIdExemplaire[5] = rset.getString("auteur");
 
-	     rset.close();
-	     stmt.close();
+	rset.close();
+	stmt.close();
  
     return getLivreParIdExemplaire;
   }
@@ -203,7 +207,7 @@ public class ComposantBDLivre {
   public static void modifierLivre(int idLivre, String isbn10, String isbn13, String titre, String auteur) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "insert into livre values ('"+idLivre+"','"+isbn10+"', '"+isbn13+"', '"+titre+"', '"+auteur+"')";
+	  String sql = "update livre set isbn10 = '"+isbn10+"', isbn13 = '"+isbn13+"', titre = '"+titre+"', auteur = '"+auteur+"' where id='"+idLivre+"'";
 	  
 	  stmt.executeUpdate(sql);
 	  
@@ -235,15 +239,16 @@ public class ComposantBDLivre {
     * @throws SQLException en cas d'erreur de connexion à la base.
     */
    public static int nbExemplaires(int idLivre) throws SQLException {
+	   
 	   ArrayList<String[]> nbExemplaire = new ArrayList<String[]>();
 		  
 		  Statement stmt = Connexion.getConnection().createStatement();
-		  String sql = "select idex from exemplaire";
+		  String sql = "select idex from exemplaire where exemliv='"+idLivre+"'";
 		  ResultSet rset = stmt.executeQuery(sql);
 
 		  while (rset.next()) {
 		    String[] nbExemplaires = new String[1];
-		    nbExemplaires[0] = rset.getString("id");
+		    nbExemplaires[0] = rset.getString("idex");
 		    
 		    nbExemplaire.add(nbExemplaires);
 		    
@@ -265,10 +270,26 @@ public class ComposantBDLivre {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
   public static ArrayList<Integer> listeExemplaires(int idLivre) throws SQLException {
-    ArrayList<Integer> exemplaires = new ArrayList<Integer>();
-    //
-    // A COMPLETER
-    //
+    
+	ArrayList<Integer> exemplaires = new ArrayList<Integer>();
+   
+    Statement stmt = Connexion.getConnection().createStatement();
+    String sql = "select idex from exemplaire where exemliv='"+idLivre+"'";
+    ResultSet rset = stmt.executeQuery(sql);
+	 
+      
+    while (rset.next()) {
+    	
+    	int exemplaire = rset.getInt("idex");
+      
+    exemplaires.add(exemplaire);
+      
+    }
+    rset.close();
+    stmt.close();
+    
+    
+    
     return exemplaires;
   }
 
@@ -279,9 +300,16 @@ public class ComposantBDLivre {
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
    public static void ajouterExemplaire(int idLivre) throws SQLException {
-     //
-     // A COMPLETER
-     //
+	   
+	   //int idex= 0;
+		  
+		  Statement stmt = Connexion.getConnection().createStatement();
+		  String sql = "insert into exemplaire values (nextval('exemplaire_idex_seq'),'"+idLivre+"')";
+		  
+		  stmt.executeUpdate(sql);
+	
+		  stmt.close();
+		  		  
    }
 
     /**
@@ -291,9 +319,10 @@ public class ComposantBDLivre {
      * @throws SQLException en cas d'erreur de connexion à la base.
      */
    public static void supprimerExemplaire(int idExemplaire) throws SQLException {
-     //
-     // A COMPLETER
-     //
+		  Statement stmt = Connexion.getConnection().createStatement();
+		  String sql = "delete from exemplaire where idex = '"+idExemplaire+"'";
+		  
+		  stmt.executeUpdate(sql);
+	  }
    }
 
-}
