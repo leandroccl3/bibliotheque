@@ -1,213 +1,183 @@
 package biblio;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Composant logiciel assurant la gestion des livres et des exemplaires
- * de livre.
+ * Composant logiciel assurant la gestion des abonnés.
  */
-public class ComposantBDLivre {
+public class ComposantBDAbonne {
 
   /**
-   * Récupération de la liste complète des livres.
+   * Récupération de la liste complète des abonnés. ESto es un comentario para probar el funcionamiento de la copia de seguridad
    * 
    * @return un <code>ArrayList<String[]></code>. Chaque tableau de chaînes
-   * de caractères contenu correspond à un livre.<br/>
+   * de caractères contenu correspond à un abonné.<br/>
    * Il doit contenir 5 éléments (dans cet ordre) :
    * <ul>
    *   <li>0 : id</li>
-   *   <li>1 : isbn10</li>
-   *   <li>2 : isbn13</li>
-   *   <li>3 : titre</li>
-   *   <li>4 : auteur</li>
+   *   <li>1 : nom</li>
+   *   <li>2 : prénom</li>
+   *   <li>3 : statut</li>
+   *   <li>4 : adresse email</li>
    * </ul>
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-  public static ArrayList<String[]> listeTousLesLivres() throws SQLException {
-
-    ArrayList<String[]> livres = new ArrayList<String[]>();
-
-    Statement stmt = Connexion.getConnection().createStatement();
-    String sql = "select * from livre";
-    ResultSet rset = stmt.executeQuery(sql);
-
-    while (rset.next()) {
-      String[] livre = new String[5];
-      livre[0] = rset.getString("id");
-      livre[1] = rset.getString("isbn10");
-      livre[2] = rset.getString("isbn13");
-      livre[3] = rset.getString("titre");
-      livre[4] = rset.getString("auteur");
-
-      livres.add(livre);
-    }
-    rset.close();
-    stmt.close();
-
-    return livres;
-   
-  }
-  
-  /**
-   * Retourne le nombre de livres référencés dans la base.
-   * 
-   * @return le nombre de livres.
-   * @throws SQLException en cas d'erreur de connexion à la base.
-   */
-  public static int nbLivres() throws SQLException {
+  public static ArrayList<String[]> listeTousLesAbonnes() throws SQLException {
 	  
-	  ArrayList<String[]> nbLivre = new ArrayList<String[]>();
+	  ArrayList<String[]> abonne = new ArrayList<String[]>();
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "select id from livre";
+	  String sql = "select * from usagers";
 	  ResultSet rset = stmt.executeQuery(sql);
-
+	  
 	  while (rset.next()) {
-	    String[] nbLivres = new String[1];
-	    nbLivres[0] = rset.getString("id");
-	    
-	    nbLivre.add(nbLivres);
-	    
-	  }
+		  
+		  String[] abonnes = new String[5];
+		  
+		  abonnes[0] = rset.getString("IDU");
+		  abonnes[1] = rset.getString("nom");
+		  abonnes[2] = rset.getString("prenom");
+		  abonnes[3] = rset.getString("status");
+		  abonnes[4] = rset.getString("email");
+		  
+		  abonne.add(abonnes);
+		  
+		  }
 	  
 	  rset.close();
 	  stmt.close();
 	  
-	  int sizeNbLivres = nbLivre.size();
+	  return abonne;
+	  }
+
+  /**
+   * Retourne le nombre d'abonnés référencés dans la base.
+   * 
+   * @return le nombre d'abonnés.
+   * @throws SQLException en cas d'erreur de connexion à la base.
+   */
+  public static int nbAbonnes() throws SQLException {
+	 
+	ArrayList<String[]> nbAbonne = new ArrayList<String[]>();
 	  
-    return sizeNbLivres;
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "select nom from usagers";
+	  ResultSet rset = stmt.executeQuery(sql);
+
+	  while (rset.next()) {
+	    String[] nbAbonnes = new String[1];
+	    
+	    nbAbonnes[0] = rset.getString("nom");
+	    
+	    nbAbonne.add(nbAbonnes);
+	    
+	    }
+	  
+	  rset.close();
+	  stmt.close();
+	  
+	  int sizeAbonne = nbAbonne.size();
+	  
+	  return sizeAbonne;
+	  
   }
 
   /**
-   * Récupération des informations sur un livre connu à partir de son identifiant.
+   * Récupération des informations sur un abonné à partir de son identifiant.
    * 
-   * @param idLivre : id du livre à rechercher
+   * @param idAbonne : id de l'abonné à rechercher
    * @return un tableau de chaînes de caractères (<code>String[]</code>). Chaque
    * tableau doit contenir 5 éléments (dans cet ordre) :
    * <ul>
    *   <li>0 : id</li>
-   *   <li>1 : isbn10</li>
-   *   <li>2 : isbn13</li>
-   *   <li>3 : titre</li>
-   *   <li>4 : auteur</li>
+   *   <li>1 : nom</li>
+   *   <li>2 : prénom</li>
+   *   <li>3 : statut</li>
+   *   <li>4 : adresse email</li>
    * </ul>
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-   public static String[] getLivre(int idLivre) throws SQLException {
+  public static String[] getAbonne(int idAbonne) throws SQLException {
     
-     
-     Statement stmt = Connexion.getConnection().createStatement();
-     String sql = "select * from livre where id='"+idLivre+"'";
-     ResultSet rset = stmt.executeQuery(sql);
-	 
-       
-     rset.next();
-     String[] Livre = new String[5];
-       
-       Livre[0] = rset.getString("id");
-       Livre[1] = rset.getString("isbn10");
-       Livre[2] = rset.getString("isbn13");
-       Livre[3] = rset.getString("titre");
-       Livre[4] = rset.getString("auteur");
-     
-     rset.close();
-     stmt.close();
-     
-     return Livre;
-   }
+  Statement stmt = Connexion.getConnection().createStatement();
+  String sql = "select * from usagers where idu='"+idAbonne+"'";
+  ResultSet rset = stmt.executeQuery(sql);
   
- /**
-  * Récupération des informations sur un livre connu à partir de l'identifiant
-  * de l'un de ses exemplaires.
-  * 
-  * @param idExemplaire : id de l'exemplaire
-  * @return un tableau de chaînes de caractères (<code>String[]</code>). Chaque
-  * tableau doit contenir 6 éléments (dans cet ordre) :
-  * <ul>
-  *   <li>0 : id de l'exemplaire</li>
-  *   <li>1 : id du livre</li>
-  *   <li>2 : isbn10</li>
-  *   <li>3 : isbn13</li>
-  *   <li>4 : titre</li>
-  *   <li>5 : auteur</li>
-  * </ul>
-  * @throws SQLException en cas d'erreur de connexion à la base.
-  */
-  public static String[] getLivreParIdExemplaire(int idExemplaire) throws SQLException {
-    	 	  
-	Statement stmt = Connexion.getConnection().createStatement();
-	String sql = " select * from livre liv join exemplaire exem on liv.id=exem.exemliv";
-	ResultSet rset = stmt.executeQuery(sql);
+  rset.next(); 
 
-	rset.next();
-	
-		String[] getLivreParIdExemplaire = new String[6];
-		getLivreParIdExemplaire[0] = rset.getString("id");
-		getLivreParIdExemplaire[1] = rset.getString("exemliv");
-	    getLivreParIdExemplaire[2] = rset.getString("isbn10");
-	    getLivreParIdExemplaire[3] = rset.getString("isbn13");
-	    getLivreParIdExemplaire[4] = rset.getString("titre");
-	    getLivreParIdExemplaire[5] = rset.getString("auteur");
-
-	rset.close();
-	stmt.close();
- 
-    return getLivreParIdExemplaire;
+    String[] abonne = new String[5];
+    
+    abonne[0] = rset.getString("idu");
+    abonne[1] = rset.getString("nom");
+    abonne[2] = rset.getString("prenom");
+    abonne[3] = rset.getString("status");
+    abonne[4] = rset.getString("email");
+    
+    rset.close();
+    stmt.close();
+    
+    return abonne;
+    
   }
 
   /**
-   * Référencement d'un nouveau livre dans la base de données.
+   * Référencement d'un nouvel abonné dans la base de données.
    * 
-   * @param isbn10
-   * @param isbn13
-   * @param titre
-   * @param auteur
-   * @return l'identifiant (id) du livre créé.
+   * @param nom
+   * @param prenom
+   * @param statut (deux valeurs possibles <i>Etudiant</i> et <i>Enseignant</i>)
+   * @param email
+   * @return l'identifiant de l'abonné référencé.
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-  public static int insererNouveauLivre(String isbn10, String isbn13, String titre, String auteur) throws SQLException {
+  public static int insererNouvelAbonne(String nom, String prenom, String statut, String email) throws SQLException {
 	  
-	  int id= 0;
+	  int idAbonne = 0;
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "insert into livre values (nextval('livre_id_seq'),'"+isbn10+"', '"+isbn13+"', '"+titre+"', '"+auteur+"')";
+	  String sql = "insert into usagers values (nextval('usagers_idu_seq'),'"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
 	  
 	  stmt.executeUpdate(sql);
 	  
-	  String query = "select currval('livre_id_seq') as valeur_courante_id_livre"; 
+	  String query = "select currval('usagers_idu_seq') as valeur_courante_idu_usagers"; 
 	  ResultSet rset = stmt.executeQuery(query);
 	  
 	  rset.next();
 	  
-	  id=rset.getInt("valeur_courante_id_livre");
+	  idAbonne=rset.getInt("valeur_courante_idu_usagers");
 	  
 	  rset.close();
 	  stmt.close();
 	  
-	  return id;
-	  
-  } 
+	  return idAbonne;
+  }
+
   
+//  private static void sql(int i, String nom) {
+	// TODO Auto-generated method stub
+	
+//}
+
 /**
-   * Modification des informations d'un livre donné connu à partir de son
-   * identifiant : les nouvelles valeurs (isbn10, isbn13, etc.) écrasent les
-   * anciennes.
+   * Modification des informations d'un abonné donné connu à partir de son
+   * identifiant : les nouvelles valeurs (nom, prenom, etc.) écrasent les anciennes.
    * 
-   * @param idLivre : id du livre à modifier.
-   * @param isbn10 : nouvelle valeur d'isbn10.
-   * @param isbn13 : nouvelle valeur d'isbn13.
-   * @param titre : nouvelle valeur du titre.
-   * @param auteur : nouvel auteur.
+   * @param idAbonne : identifiant de l'abonné dont on veut modifier les informations.
+   * @param nom
+   * @param prenom
+   * @param statut (deux valeurs possibles <i>Etudiant</i> et <i>Enseignant</i>)
+   * @param email
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-  public static void modifierLivre(int idLivre, String isbn10, String isbn13, String titre, String auteur) throws SQLException {
+  public static void modifierAbonne(int idAbonne, String nom, String prenom, String statut, String email) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "insert into livre values ('"+idLivre+"','"+isbn10+"', '"+isbn13+"', '"+titre+"', '"+auteur+"')";
+	  String sql = "insert into usagers values ('"+idAbonne+"','"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
 	  
 	  stmt.executeUpdate(sql);
 	  
@@ -217,87 +187,16 @@ public class ComposantBDLivre {
   /**
    * Suppression d'un abonné connu à partir de son identifiant.
    * 
-   * @param idLivre : id du livre à supprimer.
+   * @param idAbonne : identifiant de l'utilisateur
    * @throws SQLException en cas d'erreur de connexion à la base.
    */
-   public static void supprimerLivre(int idLivre) throws SQLException {
-	   
-	   Statement stmt = Connexion.getConnection().createStatement();
-	   String sql = "delete from livre where id='"+idLivre+"'";
-	   
-	   stmt.executeUpdate(sql);
-	
-	   stmt.close();
-   }
-
-   /**
-    * Retourne le nombre d'exemplaire d'un livre donné connu à partir
-    * de son identifiant.
-    * 
-    * @param idLivre : id du livre dont on veut connaître le nombre d'exemplaires.
-    * @return le nombre d'exemplaires
-    * @throws SQLException en cas d'erreur de connexion à la base.
-    */
-   public static int nbExemplaires(int idLivre) throws SQLException {
-	   ArrayList<String[]> nbExemplaire = new ArrayList<String[]>();
-		  
-		  Statement stmt = Connexion.getConnection().createStatement();
-		  String sql = "select idex from exemplaire";
-		  ResultSet rset = stmt.executeQuery(sql);
-
-		  while (rset.next()) {
-		    String[] nbExemplaires = new String[1];
-		    nbExemplaires[0] = rset.getString("id");
-		    
-		    nbExemplaire.add(nbExemplaires);
-		    
-		  }
-		  rset.close();
-		  stmt.close();
-		  
-		  int sizeNbExemplaires = nbExemplaire.size();
-		  
-	    return sizeNbExemplaires;
-   }
-
-  /**
-   * Récupération de la liste des identifiants d'exemplaires d'un livre donné
-   * connu à partir de son identifiant.
-   * 
-   * @param idLivre : identifiant du livre dont on veut la liste des exemplaires.
-   * @return un <code>ArrayList<Integer></code> contenant les identifiants des exemplaires
-   * @throws SQLException en cas d'erreur de connexion à la base.
-   */
-  public static ArrayList<Integer> listeExemplaires(int idLivre) throws SQLException {
-    ArrayList<Integer> exemplaires = new ArrayList<Integer>();
-    //
-    // A COMPLETER
-    //
-    return exemplaires;
+  public static void supprimerAbonne(int idAbonne) throws SQLException {
+	  
+	  Statement stmt = Connexion.getConnection().createStatement();
+	  String sql = "delete from usagers where idu='"+idAbonne+"'";
+	  
+	  stmt.executeUpdate(sql);
+	  
+	  stmt.close();
   }
-
-  /**
-   * Ajout d'un exemplaire à un livre donné connu par son identifiant.
-   * 
-   * @param id identifiant du livre dont on veut ajouter un exemplaire.
-   * @throws SQLException en cas d'erreur de connexion à la base.
-   */
-   public static void ajouterExemplaire(int idLivre) throws SQLException {
-     //
-     // A COMPLETER
-     //
-   }
-
-    /**
-     * Suppression d'un exemplaire donné connu par son identifiant.
-     * 
-     * @param idExemplaire : identifiant du livre dont on veut supprimer un exemplaire.
-     * @throws SQLException en cas d'erreur de connexion à la base.
-     */
-   public static void supprimerExemplaire(int idExemplaire) throws SQLException {
-     //
-     // A COMPLETER
-     //
-   }
-
 }
