@@ -267,7 +267,7 @@ public class ComposantBDEmprunt {
 	  //int hour = Calendar.getInstance().get(Calendar.HOUR);
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "update emprunts set dateret = '"+year+"-"+month+"-"+day+"' where idem = '"+idExemplaire+"'";
+	  String sql = "update emprunts set dateret = '"+year+"-"+month+"-"+day+"' where exemempr = '"+idExemplaire+"'";
 	  
 	  stmt.executeUpdate(sql);
   }
@@ -331,12 +331,72 @@ public class ComposantBDEmprunt {
    *   
    * @throws SQLException
    */
-  public static HashMap<String, int[]> statsEmprunts() throws SQLException
-  {
-    HashMap<String, int[]> stats = new HashMap<String, int[]>();
-    //
-    // A COMPLETER
-    //
+  public static HashMap<String, int[]> statsEmprunts() throws SQLException{
+	  
+	  int year = Calendar.getInstance().get(Calendar.YEAR); 
+	  int month = Calendar.getInstance().get(Calendar.MONTH)+1; 
+	  int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); 
+	  String fecha = year+"-"+month+"-"+day;
+	  
+	  ArrayList<String[]> idRetAuj = new ArrayList<String[]>();
+	  ArrayList<String[]> idEmpAuj = new ArrayList<String[]>();
+	  ArrayList<String[]> exemp = new ArrayList<String[]>();
+	
+	
+	  HashMap<String, int[]> stats = new HashMap<String, int[]>();
+    
+
+    Statement stmt = Connexion.getConnection().createStatement();
+	 String sql="select idem from emprunts where dateret = '2017-05-14' ";
+	 ResultSet rset = stmt.executeQuery(sql);
+	 
+	 while(rset.next()){
+		 String [] nbRetAuj = new String[1];
+		 nbRetAuj[0] = rset.getString("idem");
+		 idRetAuj.add(nbRetAuj);	 
+		 }
+	 
+	 
+	 int nbIdRetAuj=idRetAuj.size();
+	 	
+	 
+	 String sql2="select idem from emprunts where dateemp = '"+fecha+"' ";
+	 ResultSet rset2 = stmt.executeQuery(sql2);
+	 
+	 while(rset2.next()){
+		 String [] nbEmpAuj = new String[1];
+		 nbEmpAuj[0] = rset2.getString("idem");
+		 idEmpAuj.add(nbEmpAuj);	 
+		 }
+	 
+	 
+	 int nbIdEmpAuj=idEmpAuj.size();
+	 
+	 String sql3="select idex from exemplaire";
+	 ResultSet rset3 = stmt.executeQuery(sql3);
+	 
+	 while(rset3.next()){
+		 String[] exem = new String[1];
+		 exem[0] = rset3.getString("idex");
+		 exemp.add(exem);
+		 }
+	 int nbExemp=exemp.size();
+	 
+	 int [] nbRetAujStat = new int[2];
+	  
+	 nbRetAujStat[0]=nbIdRetAuj/nbExemp;
+	 nbRetAujStat[1]=nbIdEmpAuj/nbExemp;
+	 	 	 
+	 
+	 stats.put(fecha, nbRetAujStat);
+	 
+	 rset.close();
+	 rset2.close();
+	 rset3.close();
+	 
+	 stmt.close();
+    
+    
     return stats;
   }
 }
