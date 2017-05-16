@@ -32,7 +32,7 @@ public class ComposantBDAbonne {
 	  ArrayList<String[]> abonne = new ArrayList<String[]>();
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "select * from usagers";
+	  String sql = "select * from usagers where active = true";
 	  ResultSet rset = stmt.executeQuery(sql);
 	  
 	  while (rset.next()) {
@@ -140,7 +140,7 @@ public class ComposantBDAbonne {
 	  int idAbonne = 0;
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "insert into usagers values (nextval('usagers_idu_seq'),'"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
+	  String sql = "insert into usagers values (nextval('usagers_idu_seq'),'"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"', true)";
 	  
 	  stmt.executeUpdate(sql);
 	  
@@ -177,7 +177,7 @@ public class ComposantBDAbonne {
   public static void modifierAbonne(int idAbonne, String nom, String prenom, String statut, String email) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "insert into usagers values ('"+idAbonne+"','"+nom+"', '"+prenom+"', '"+statut+"', '"+email+"')";
+	  String sql = "update usagers set (nom = '"+nom+"', prenom = '"+prenom+"', status ='"+statut+"', email = '"+email+"') where idu = '"+idAbonne+"'";
 	  
 	  stmt.executeUpdate(sql);
 	  
@@ -193,8 +193,8 @@ public class ComposantBDAbonne {
   public static void supprimerAbonne(int idAbonne) throws SQLException {
 	  
 	  Statement stmt = Connexion.getConnection().createStatement();
-	  String sql = "delete from usagers where idu='"+idAbonne+"'";
-	  
+	  String sql = "update usagers set active = ((select emp.dateret from emprunts emp join usagers us on emp.emprunteur=us.idu where idu = '"+idAbonne+"')='1111-11-11')";
+	    
 	  stmt.executeUpdate(sql);
 	  
 	  stmt.close();
