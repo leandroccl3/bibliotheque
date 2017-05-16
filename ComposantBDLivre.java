@@ -140,7 +140,7 @@ public class ComposantBDLivre {
   public static String[] getLivreParIdExemplaire(int idExemplaire) throws SQLException {
     	 	  
 	Statement stmt = Connexion.getConnection().createStatement();
-	String sql = " select * from livre liv join exemplaire exem on liv.id=exem.exemliv";
+	String sql = " select * from livre liv join exemplaire exem on liv.id=exem.exemliv where idex='"+idExemplaire+"'";
 	ResultSet rset = stmt.executeQuery(sql);
 
 	rset.next();
@@ -243,7 +243,7 @@ public class ComposantBDLivre {
 	   ArrayList<String[]> nbExemplaire = new ArrayList<String[]>();
 		  
 		  Statement stmt = Connexion.getConnection().createStatement();
-		  String sql = "select idex from exemplaire where exemliv='"+idLivre+"'";
+		  String sql = "select idex from exemplaire where exemliv='"+idLivre+"' and exemactive = true";
 		  ResultSet rset = stmt.executeQuery(sql);
 
 		  while (rset.next()) {
@@ -274,7 +274,7 @@ public class ComposantBDLivre {
 	ArrayList<Integer> exemplaires = new ArrayList<Integer>();
    
     Statement stmt = Connexion.getConnection().createStatement();
-    String sql = "select idex from exemplaire where exemliv='"+idLivre+"'";
+    String sql = "select idex from exemplaire where exemliv='"+idLivre+"' and exemactive = true";
     ResultSet rset = stmt.executeQuery(sql);
 	 
       
@@ -304,7 +304,7 @@ public class ComposantBDLivre {
 	   //int idex= 0;
 		  
 		  Statement stmt = Connexion.getConnection().createStatement();
-		  String sql = "insert into exemplaire values (nextval('exemplaire_idex_seq'),'"+idLivre+"')";
+		  String sql = "insert into exemplaire values (nextval('exemplaire_idex_seq'),'"+idLivre+"', true)";
 		  
 		  stmt.executeUpdate(sql);
 	
@@ -319,10 +319,28 @@ public class ComposantBDLivre {
      * @throws SQLException en cas d'erreur de connexion à la base.
      */
    public static void supprimerExemplaire(int idExemplaire) throws SQLException {
-		  Statement stmt = Connexion.getConnection().createStatement();
-		  String sql = "delete from exemplaire where idex = '"+idExemplaire+"'";
-		  
-		  stmt.executeUpdate(sql);
+		
+	   int idem=0;
+	   
+	   Statement stmt = Connexion.getConnection().createStatement();
+	   String sql = "select idem from emprunts emp join exemplaire exem on emp.exemempr=exem.idex where exem.idex = '"+idExemplaire+"' and emp.dateret='1111-11-11'";
+	   
+	   ResultSet rset = stmt.executeQuery(sql);
+	   
+	   while (rset.next()) {
+	    	
+	    	idem = rset.getInt("idem");
+	      
+	   }
+	   
+	   if (idem == 0){
+		   
+		   String sql2 = "update exemplaire set exemactive = false where idex='"+idExemplaire+"'";
+		   stmt.executeUpdate(sql2);
+
+	   }
+	    rset.close();
+	    stmt.close();
 	  }
    }
 
