@@ -32,14 +32,15 @@ create table usagers
     nom varchar(30) not null,
     prenom varchar(30) not null,
     status varchar(30) not null,
-    email varchar(40) not null
-    
+    email varchar(40) not null,
+    active boolean not null
 );
 --+-----------------------------------------------------------------------------------------------+
 create table exemplaire 
 (
     idex serial primary key,
-    exemliv serial references livre (id)
+    exemliv serial references livre (id),
+    exemactive boolean not null
 );
 --+-----------------------------------------------------------------------------------------------+
 create table emprunts 
